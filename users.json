@@ -3,5 +3,11 @@
     "email": "adapauma48@gmail.com",
     "password_hash": "2b32f2c42f33f12514dd26a1b9a19fd0174056bccff06928ae525941b698781f",
     "created_at": "1788860940.599985"
+  },
+  "nani": {
+    "username": "nani",
+    "email": "adapauma48@gmail.com",
+    "salt": "c370b0e6a263eaf6d1c8e724e8b0459b",
+    "password_hash": "8f2b9583d5df90844073ff390f66a441e62e871e38ea59937cc80eddbadbccee"
   }
 }
