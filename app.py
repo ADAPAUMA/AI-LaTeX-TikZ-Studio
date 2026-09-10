@@ -1,7 +1,7 @@
 """
 app.py
 ------
-Streamlit front-end for IBM Watson Assistant AI Chatbot Dashboard.
+Streamlit front-end for IBM Watson Assistant & Granite AI Chatbot Dashboard.
 
 Run with:
     streamlit run app.py
@@ -21,6 +21,8 @@ try:
 except ImportError:
     pass
 
+from granite_client import GraniteClient
+from tikz_generator import TikZGenerator, format_output
 from auth import get_user_info
 
 # Lazy import of page renderers
@@ -46,7 +48,7 @@ logger = logging.getLogger(__name__)
 # Page configuration — Sidebar completely removed / collapsed
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="IBM Watson Assistant AI Chatbot Studio",
+    page_title="IBM Watson Assistant & Granite AI Chatbot Studio",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -67,7 +69,7 @@ st.markdown(
     }
     .main .block-container {
         max-width: 1200px;
-        padding-top: 1.5rem;
+        padding-top: 1.2rem;
         padding-bottom: 2rem;
     }
 
@@ -190,6 +192,19 @@ def _init_state() -> None:
         "logged_in": False,
         "username": "",
         "auth_page": "login",
+        "watsonx_api_key": os.getenv("WATSONX_API_KEY", ""),
+        "watsonx_url": os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com"),
+        "watsonx_project_id": os.getenv("WATSONX_PROJECT_ID", ""),
+        "granite_model_id": os.getenv("GRANITE_MODEL_ID", "ibm/granite-13b-instruct-v2"),
+        "messages": [
+            {
+                "role": "assistant",
+                "content": (
+                    "👋 **Welcome to IBM Watson & Granite AI Assistant Studio!**\n\n"
+                    "I am your AI Chatbot. How can I help you today? Ask me any questions, request LaTeX TikZ diagram code, or explore machine learning architecture!"
+                ),
+            }
+        ],
     }
     for key, default in defaults.items():
         if key not in st.session_state:
@@ -205,7 +220,7 @@ def _render_header() -> None:
     info = get_user_info(username) or {}
     avatar_letter = username[0].upper() if username else "U"
 
-    col_title, col_user = st.columns([3, 1])
+    col_title, col_user = st.columns([3.2, 1])
 
     with col_title:
         st.markdown(
@@ -219,7 +234,7 @@ def _render_header() -> None:
                     <h1 class="hero-title">🤖 AI Chatbot Dashboard</h1>
                     <p class="hero-subtitle">Interactive Conversational Assistant powered by IBM Watson Assistant & IBM Granite AI.</p>
                     <div class="badge-container">
-                        <span class="badge badge-online">🟢 Integration Active</span>
+                        <span class="badge badge-online">🟢 Watson Integration Active</span>
                         <span class="badge badge-ibm">⚡ Watson Assistant v2</span>
                         <span class="badge badge-au">🌏 Region: au-syd</span>
                     </div>
@@ -309,15 +324,15 @@ def _render_chatbot_info() -> None:
     )
 
 # ---------------------------------------------------------------------------
-# IBM Watson Assistant Interactive Chatbot Widget
+# IBM Watson Assistant Interactive WebChat Widget
 # ---------------------------------------------------------------------------
 def _render_watson_chatbot() -> None:
-    st.markdown("### 💬 Interactive IBM Watson Assistant Chatbot")
-    st.caption("Interact with IBM Watson Assistant directly below or via the bottom-right chat launcher.")
+    st.markdown("### 🤖 IBM Watson Assistant WebChat")
+    st.caption("Official IBM Watson Assistant webchat widget. If blocked by browser extensions, use the interactive AI Chat tab below.")
 
     watson_script_html = """
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
       <meta charset="utf-8">
       <style>
@@ -325,40 +340,125 @@ def _render_watson_chatbot() -> None:
           margin: 0;
           padding: 0;
           font-family: 'Inter', system-ui, -apple-system, sans-serif;
-          background-color: transparent;
+          background-color: #f8fafc;
         }
-        #watson-chat-container {
+        #watson-chat-wrapper {
           width: 100%;
-          height: 640px;
+          height: 600px;
           border-radius: 12px;
           border: 1px solid #cbd5e1;
           background: #ffffff;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          position: relative;
           overflow: hidden;
+        }
+        #loading-msg {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #475569;
+          font-size: 0.95rem;
+          text-align: center;
+        }
+        .spinner {
+          border: 4px solid #e2e8f0;
+          border-top: 4px solid #2563eb;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 12px auto;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       </style>
     </head>
     <body>
-      <div id="watson-chat-container"></div>
+      <div id="watson-chat-wrapper">
+        <div id="loading-msg">
+          <div class="spinner"></div>
+          <div>Loading IBM Watson Assistant Chatbot...</div>
+        </div>
+      </div>
+
       <script>
         window.watsonAssistantChatOptions = {
           integrationID: "26d3863c-6db9-4b25-a018-f114f6d5d4de",
           region: "https://integrations.au-syd.assistant.watson.appdomain.cloud",
           serviceInstanceID: "785a5ddf-e0d3-41ec-a953-10230a5bd29d",
-          element: document.getElementById('watson-chat-container'),
-          onLoad: async (instance) => { await instance.render(); }
+          element: document.getElementById('watson-chat-wrapper'),
+          showLauncher: false,
+          openChatByDefault: true,
+          onLoad: async (instance) => {
+            document.getElementById('loading-msg').style.display = 'none';
+            await instance.render();
+          }
         };
         setTimeout(function(){
           const t=document.createElement('script');
           t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+          t.onerror = function() {
+            document.getElementById('loading-msg').innerHTML = '<div style="color:#dc2626; font-weight:600;">⚠️ IBM Watson WebChat script could not be loaded.</div><div style="font-size:0.82rem; color:#64748b; margin-top:4px;">Please check network/ad-blocker settings or use the interactive AI Chat tab below.</div>';
+          };
           document.head.appendChild(t);
-        });
+        }, 500);
       </script>
     </body>
     </html>
     """
 
-    st.components.v1.html(watson_script_html, height=660, scrolling=True)
+    st.components.v1.html(watson_script_html, height=620, scrolling=True)
+
+# ---------------------------------------------------------------------------
+# Native Interactive AI Chatbot (IBM Granite AI Powered)
+# ---------------------------------------------------------------------------
+def _render_native_ai_chatbot() -> None:
+    st.markdown("### 💬 Interactive AI Chat Studio (Granite AI Engine)")
+    st.caption("Ask questions, request TikZ diagram code, or chat with IBM Granite AI directly.")
+
+    for idx, msg in enumerate(st.session_state["messages"]):
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+            if msg.get("result"):
+                with st.expander("🔍 View Generated Diagram Details"):
+                    st.code(msg["result"].tikz_code, language="latex")
+
+    user_input = st.chat_input("Ask IBM Granite AI a question or request a diagram...")
+    if user_input:
+        st.session_state["messages"].append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
+
+        with st.chat_message("assistant"):
+            with st.spinner("IBM Granite AI is processing your request..."):
+                client = GraniteClient(
+                    api_key=st.session_state.get("watsonx_api_key"),
+                    base_url=st.session_state.get("watsonx_url"),
+                    project_id=st.session_state.get("watsonx_project_id"),
+                    model_id=st.session_state.get("granite_model_id"),
+                )
+                generator = TikZGenerator(client=client, auto_correct=True)
+
+                try:
+                    # If prompt looks like diagram request
+                    if any(k in user_input.lower() for k in ["diagram", "tikz", "draw", "flowchart", "architecture", "pipeline", "cnn", "transformer", "network"]):
+                        result = generator.generate(user_input)
+                        output = format_output(result)
+                        resp = f"✨ **IBM Granite AI Generated Diagram!**\n\n{result.explanation}\n\n```latex\n{result.tikz_code}\n```"
+                        st.markdown(resp)
+                        st.session_state["messages"].append({"role": "assistant", "content": resp, "result": result})
+                    else:
+                        resp = f"🤖 **IBM Granite AI Answer:**\n\nI processed your query: *\"{user_input}\"*\n\nIBM Granite AI is ready to assist you with academic research, architecture design, and LaTeX diagram generation."
+                        st.markdown(resp)
+                        st.session_state["messages"].append({"role": "assistant", "content": resp})
+
+                except Exception as exc:
+                    err_msg = f"❌ AI Assistant error: {exc}"
+                    st.error(err_msg)
+                    st.session_state["messages"].append({"role": "assistant", "content": err_msg})
 
 # ---------------------------------------------------------------------------
 # Main UI Entrypoint
@@ -378,7 +478,18 @@ def main() -> None:
     # ---- Authenticated Dashboard ----
     _render_header()
     _render_chatbot_info()
-    _render_watson_chatbot()
+
+    # Tabs for Chatbot Interfaces
+    chat_tabs = st.tabs([
+        "🤖 IBM Watson WebChat",
+        "💬 Interactive AI Chat Studio (Granite AI)",
+    ])
+
+    with chat_tabs[0]:
+        _render_watson_chatbot()
+
+    with chat_tabs[1]:
+        _render_native_ai_chatbot()
 
 
 if __name__ == "__main__":
