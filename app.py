@@ -192,15 +192,15 @@ def _init_state() -> None:
         "logged_in": False,
         "username": "",
         "auth_page": "login",
-        "watsonx_api_key": os.getenv("WATSONX_API_KEY", ""),
-        "watsonx_url": os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com"),
-        "watsonx_project_id": os.getenv("WATSONX_PROJECT_ID", ""),
+        "watsonx_api_key": os.getenv("WATSONX_API_KEY", "h4pKEjuby26VmDxdvgE1w8MlF3zU1u7h4nal1J-s8zUe"),
+        "watsonx_url": os.getenv("WATSONX_URL", "https://api.au-syd.assistant.watson.cloud.ibm.com/instances/785a5ddf-e0d3-41ec-a953-10230a5bd29d"),
+        "watsonx_project_id": os.getenv("WATSONX_PROJECT_ID", "785a5ddf-e0d3-41ec-a953-10230a5bd29d"),
         "granite_model_id": os.getenv("GRANITE_MODEL_ID", "ibm/granite-13b-instruct-v2"),
         "messages": [
             {
                 "role": "assistant",
                 "content": (
-                    "👋 **Welcome to IBM Watson & Granite AI Assistant Studio!**\n\n"
+                    "👋 **Welcome to IBM Watson Assistant & Granite AI Studio!**\n\n"
                     "I am your AI Chatbot. How can I help you today? Ask me any questions, request LaTeX TikZ diagram code, or explore machine learning architecture!"
                 ),
             }
@@ -235,7 +235,7 @@ def _render_header() -> None:
                     <p class="hero-subtitle">Interactive Conversational Assistant powered by IBM Watson Assistant & IBM Granite AI.</p>
                     <div class="badge-container">
                         <span class="badge badge-online">🟢 Watson Integration Active</span>
-                        <span class="badge badge-ibm">⚡ Watson Assistant v2</span>
+                        <span class="badge badge-ibm">⚡ Integration: bad150a7...</span>
                         <span class="badge badge-au">🌏 Region: au-syd</span>
                     </div>
                 </div>
@@ -313,10 +313,11 @@ def _render_chatbot_info() -> None:
             </div>
 
             <div style="margin-top: 1.2rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.84rem; color: #1e40af;">
-                ℹ️ <b>Integration Details:</b><br/>
-                • <b>Integration ID:</b> <code>26d3863c-6db9-4b25-a018-f114f6d5d4de</code><br/>
+                ℹ️ <b>Live Integration Details:</b><br/>
+                • <b>Integration ID:</b> <code>bad150a7-6816-40db-9249-10be96c432f4</code><br/>
                 • <b>Region:</b> <code>https://integrations.au-syd.assistant.watson.appdomain.cloud</code><br/>
-                • <b>Service Instance ID:</b> <code>785a5ddf-e0d3-41ec-a953-10230a5bd29d</code>
+                • <b>Service Instance ID:</b> <code>785a5ddf-e0d3-41ec-a953-10230a5bd29d</code><br/>
+                • <b>Service Endpoint:</b> <code>https://api.au-syd.assistant.watson.cloud.ibm.com/instances/785a5ddf-e0d3-41ec-a953-10230a5bd29d</code>
             </div>
         </div>
         """,
@@ -328,7 +329,7 @@ def _render_chatbot_info() -> None:
 # ---------------------------------------------------------------------------
 def _render_watson_chatbot() -> None:
     st.markdown("### 🤖 IBM Watson Assistant WebChat")
-    st.caption("Official IBM Watson Assistant webchat widget. If blocked by browser extensions, use the interactive AI Chat tab below.")
+    st.caption("Official IBM Watson Assistant webchat widget. Connected to integration: bad150a7-6816-40db-9249-10be96c432f4")
 
     watson_script_html = """
     <!DOCTYPE html>
@@ -380,13 +381,13 @@ def _render_watson_chatbot() -> None:
       <div id="watson-chat-wrapper">
         <div id="loading-msg">
           <div class="spinner"></div>
-          <div>Loading IBM Watson Assistant Chatbot...</div>
+          <div>Loading IBM Watson Assistant Chatbot (bad150a7...)...</div>
         </div>
       </div>
 
       <script>
         window.watsonAssistantChatOptions = {
-          integrationID: "26d3863c-6db9-4b25-a018-f114f6d5d4de",
+          integrationID: "bad150a7-6816-40db-9249-10be96c432f4",
           region: "https://integrations.au-syd.assistant.watson.appdomain.cloud",
           serviceInstanceID: "785a5ddf-e0d3-41ec-a953-10230a5bd29d",
           element: document.getElementById('watson-chat-wrapper'),
