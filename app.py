@@ -2,7 +2,7 @@
 app.py
 ------
 Streamlit front-end for IBM Watson Assistant & Granite AI Chatbot Dashboard.
-Enhanced with 3D Glassmorphism, Micro-Animations, and Premium Visual Design.
+Enhanced with High-Contrast Typography, Animated HTML5 Canvas Background, & 3D Glassmorphism.
 
 Run with:
     streamlit run app.py
@@ -56,7 +56,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
-# Custom CSS — Ultra-Premium 3D Glassmorphism, Neon Glow & Animations
+# Custom CSS — High Contrast Readability & 3D Glassmorphism Aesthetics
 # ---------------------------------------------------------------------------
 st.markdown(
     """
@@ -76,11 +76,34 @@ st.markdown(
         padding-bottom: 2.5rem;
     }
 
-    /* Global App Styling */
+    /* Global High-Contrast Styling */
     .stApp {
-        background: radial-gradient(circle at 15% 15%, #0f172a 0%, #090d16 50%, #020617 100%);
+        background: radial-gradient(circle at 15% 15%, #0b1329 0%, #060913 50%, #02040a 100%);
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        color: #f8fafc;
+        color: #f8fafc !important;
+    }
+
+    /* Universal Text Visibility Fix — All paragraphs, spans, headers, captions */
+    p, span, label, li, small, caption, .stMarkdown {
+        color: #e2e8f0 !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+    }
+    [data-testid="stCaptionContainer"] {
+        color: #94a3b8 !important;
+    }
+
+    /* Input Fields & Textareas — High Contrast Dark Slate with White Text */
+    input, textarea, [data-baseweb="input"] {
+        background-color: #1e293b !important;
+        color: #ffffff !important;
+        border: 1px solid #475569 !important;
+        border-radius: 10px !important;
+    }
+    input::placeholder, textarea::placeholder {
+        color: #94a3b8 !important;
     }
 
     /* Keyframe Animations */
@@ -88,11 +111,6 @@ st.markdown(
         0% { transform: translateY(0px) rotate(0deg); }
         50% { transform: translateY(-8px) rotate(1deg); }
         100% { transform: translateY(0px) rotate(0deg); }
-    }
-    @keyframes glowPulse {
-        0% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
-        50% { box-shadow: 0 0 35px rgba(99, 102, 241, 0.8); }
-        100% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
     }
     @keyframes statusPulse {
         0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
@@ -102,13 +120,13 @@ st.markdown(
 
     /* 3D Glassmorphic Hero Banner */
     .hero-banner-3d {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 58, 138, 0.75) 50%, rgba(99, 102, 241, 0.65) 100%);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.85) 50%, rgba(99, 102, 241, 0.75) 100%);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         padding: 2.2rem 2.5rem;
-        box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.8), 0 0 30px rgba(59, 130, 246, 0.2);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(59, 130, 246, 0.3);
         margin-bottom: 1.8rem;
         display: flex;
         justify-content: space-between;
@@ -119,29 +137,19 @@ st.markdown(
         overflow: hidden;
         animation: float3d 6s ease-in-out infinite;
     }
-    .hero-banner-3d::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-        pointer-events: none;
-    }
     .hero-title-3d {
         font-size: 2.2rem;
         font-weight: 800;
         margin: 0;
         letter-spacing: -0.03em;
-        background: linear-gradient(135deg, #ffffff 0%, #93c5fd 60%, #c084fc 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #93c5fd 60%, #e0e7ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        text-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
     .hero-subtitle-3d {
-        font-size: 1.02rem;
-        color: #cbd5e1;
+        font-size: 1.05rem;
+        color: #e2e8f0 !important;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
         max-width: 650px;
@@ -161,18 +169,15 @@ st.markdown(
         gap: 0.5rem;
         padding: 0.4rem 1rem;
         border-radius: 9999px;
-        font-size: 0.78rem;
+        font-size: 0.8rem;
         font-weight: 700;
         letter-spacing: 0.02em;
         backdrop-filter: blur(10px);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .badge-3d:hover {
-        transform: translateY(-3px) scale(1.04);
-    }
     .badge-online-3d {
-        background: rgba(6, 78, 59, 0.8);
-        color: #6ee7b7;
+        background: rgba(6, 78, 59, 0.9);
+        color: #a7f3d0 !important;
         border: 1px solid #10b981;
         box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     }
@@ -184,47 +189,40 @@ st.markdown(
         animation: statusPulse 2s infinite;
     }
     .badge-ibm-3d {
-        background: rgba(30, 58, 138, 0.8);
-        color: #93c5fd;
+        background: rgba(30, 58, 138, 0.9);
+        color: #bfdbfe !important;
         border: 1px solid #3b82f6;
         box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
     }
     .badge-au-3d {
-        background: rgba(88, 28, 135, 0.8);
-        color: #f0abfc;
+        background: rgba(88, 28, 135, 0.9);
+        color: #f5d0fe !important;
         border: 1px solid #c084fc;
         box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
     }
 
     /* 3D Glassmorphism Cards */
     .glass-card-3d {
-        background: rgba(15, 23, 42, 0.75);
+        background: rgba(15, 23, 42, 0.85);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 18px;
         padding: 1.8rem;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
         margin-bottom: 1.8rem;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .glass-card-3d:hover {
-        transform: translateY(-6px) rotateX(1deg);
-        border-color: rgba(99, 102, 241, 0.4);
-        box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     .glass-card-header {
         font-size: 1.25rem;
         font-weight: 800;
-        color: #ffffff;
+        color: #ffffff !important;
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.6rem;
-        letter-spacing: -0.01em;
     }
 
-    /* 3D Grid & Stats Cards */
+    /* 3D Grid & Cards */
     .grid-3d {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -232,89 +230,169 @@ st.markdown(
         margin-top: 1.2rem;
     }
     .card-item-3d {
-        background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
         padding: 1.2rem 1.4rem;
         border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-left: 4px solid #6366f1;
-        transition: all 0.3s ease;
-    }
-    .card-item-3d:hover {
-        transform: translateY(-4px) scale(1.02);
-        background: linear-gradient(145deg, rgba(30, 58, 138, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
-        border-left-color: #a855f7;
-        box-shadow: 0 12px 25px -5px rgba(99, 102, 241, 0.3);
     }
     .card-item-title-3d {
         font-weight: 700;
-        color: #f1f5f9;
-        font-size: 0.96rem;
+        color: #ffffff !important;
+        font-size: 0.98rem;
         margin-bottom: 0.4rem;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
     }
     .card-item-desc-3d {
-        font-size: 0.85rem;
-        color: #94a3b8;
+        font-size: 0.88rem;
+        color: #cbd5e1 !important;
         line-height: 1.5;
     }
 
-    /* Glowing Code Box */
+    /* Glowing Integration Code Box */
     .integration-box-3d {
         margin-top: 1.5rem;
-        background: rgba(15, 23, 42, 0.9);
-        border: 1px solid rgba(99, 102, 241, 0.3);
+        background: rgba(10, 15, 30, 0.95);
+        border: 1px solid rgba(99, 102, 241, 0.4);
         border-radius: 12px;
-        padding: 1rem 1.2rem;
+        padding: 1.2rem;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.85rem;
-        color: #a5b4fc;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        font-size: 0.88rem;
+        color: #cbd5e1 !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
     }
     .integration-box-3d code {
-        color: #38bdf8;
-        font-weight: 600;
+        color: #38bdf8 !important;
+        font-weight: 700;
+        background: rgba(30, 58, 138, 0.5);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    /* Chat Messages Styling — High Contrast */
+    [data-testid="stChatMessage"] {
+        background-color: rgba(30, 41, 59, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 14px !important;
+        color: #f8fafc !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     /* Tabs Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 1rem;
-        background-color: rgba(15, 23, 42, 0.6);
+        background-color: rgba(15, 23, 42, 0.8);
         padding: 0.5rem;
         border-radius: 14px;
-        border: 1px solid rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
     }
     .stTabs [data-baseweb="tab"] {
         height: 48px;
         white-space: pre-wrap;
         border-radius: 10px;
-        color: #94a3b8;
+        color: #cbd5e1 !important;
         font-weight: 700;
         font-size: 0.95rem;
-        transition: all 0.3s ease;
     }
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
         color: #ffffff !important;
-        box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.5) !important;
+        box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.6) !important;
     }
 
     /* Custom Buttons */
     .stButton>button {
         border-radius: 12px;
         font-weight: 700;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #ffffff !important;
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
     }
     .stButton>button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
+# ---------------------------------------------------------------------------
+# HTML5 Particle Animation Canvas Component
+# ---------------------------------------------------------------------------
+def _render_particle_animation() -> None:
+    particle_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
+        canvas { display: block; width: 100vw; height: 120px; }
+      </style>
+    </head>
+    <body>
+      <canvas id="particleCanvas"></canvas>
+      <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = 120;
+
+        window.addEventListener('resize', () => {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = 120;
+        });
+
+        const particles = [];
+        for (let i = 0; i < 45; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 1.2,
+            vy: (Math.random() - 0.5) * 0.8,
+            radius: Math.random() * 2.5 + 1.5,
+            color: Math.random() > 0.5 ? 'rgba(59, 130, 246, ' : 'rgba(168, 85, 247, '
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+          for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + '0.7)';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#3b82f6';
+            ctx.fill();
+
+            for (let j = i + 1; j < particles.length; j++) {
+              let p2 = particles[j];
+              let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+              if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(99, 102, 241, ${0.35 * (1 - dist / 100)})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+          }
+          requestAnimationFrame(draw);
+        }
+        draw();
+      </script>
+    </body>
+    </html>
+    """
+    st.components.v1.html(particle_html, height=120, scrolling=False)
 
 # ---------------------------------------------------------------------------
 # Session State Initialization
@@ -382,12 +460,12 @@ def _render_header() -> None:
         st.markdown(
             f"""
             <div style="
-                background: rgba(15, 23, 42, 0.85);
+                background: rgba(15, 23, 42, 0.95);
                 backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.18);
                 border-radius: 18px;
                 padding: 1.2rem;
-                box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+                box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
                 display: flex;
                 flex-direction: column;
                 gap: 0.6rem;
@@ -398,11 +476,11 @@ def _render_header() -> None:
                         background: linear-gradient(135deg,#3b82f6,#8b5cf6);
                         color:#ffffff; display:flex; align-items:center;
                         justify-content:center; font-weight:800; font-size:1.3rem;
-                        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+                        box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
                     ">{avatar_letter}</div>
                     <div>
-                        <div style="font-weight:800; color:#f8fafc; font-size:1rem;">{username}</div>
-                        <div style="color:#94a3b8; font-size:0.78rem;">{info.get('email', 'Logged in User')}</div>
+                        <div style="font-weight:800; color:#ffffff; font-size:1.02rem;">{username}</div>
+                        <div style="color:#cbd5e1; font-size:0.8rem;">{info.get('email', 'Logged in User')}</div>
                     </div>
                 </div>
             </div>
@@ -425,7 +503,7 @@ def _render_chatbot_info() -> None:
             <div class="glass-card-header">
                 💡 IBM Watson Assistant 3D Capabilities & Overview
             </div>
-            <div style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+            <div style="color: #e2e8f0 !important; font-size: 0.98rem; line-height: 1.6;">
                 Welcome to the <b>IBM Watson Assistant 3D Studio</b>. This AI chatbot integration brings enterprise-grade conversational AI capabilities directly into your dashboard. Ask questions, request LaTeX TikZ diagram code, explore AI workflows, or interact naturally with Watson Assistant.
             </div>
             
@@ -483,9 +561,9 @@ def _render_watson_chatbot() -> None:
           width: 100%;
           height: 610px;
           border-radius: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           background: #ffffff;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.25);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.3);
           position: relative;
           overflow: hidden;
         }
@@ -496,7 +574,7 @@ def _render_watson_chatbot() -> None:
           transform: translate(-50%, -50%);
           color: #0f172a;
           font-size: 1rem;
-          font-weight: 600;
+          font-weight: 700;
           text-align: center;
         }
         .spinner {
@@ -614,6 +692,7 @@ def main() -> None:
         return
 
     # ---- Authenticated Dashboard ----
+    _render_particle_animation()
     _render_header()
     _render_chatbot_info()
 
