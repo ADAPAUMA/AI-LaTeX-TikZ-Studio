@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sequence Diagram — IBM Bob AI LaTeX TikZ Studio</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; font-family:-apple-system,"Segoe UI",system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; padding:20px; }
+  .toolbar {
+    display:flex; align-items:center; gap:14px; margin-bottom:16px;
+    background:#1e1e1e; border:1px solid #333; border-radius:10px; padding:10px 20px;
+  }
+  .toolbar span { color:#e2e8f0; font-size:13px; font-weight:600; }
+  .btn {
+    background:linear-gradient(135deg,#1d4ed8,#2563eb);
+    color:#fff; border:none; border-radius:8px;
+    padding:8px 20px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .btn:hover { background:linear-gradient(135deg,#1e40af,#1d4ed8); }
+  .diagram-wrap { border:1px solid #333; border-radius:10px; overflow:hidden; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span>🖼️ IBM Bob — AI LaTeX TikZ Studio · Sequence Diagram</span>
+  <button class="btn" id="dlBtn">⬇ Save as JPG</button>
+</div>
+
+<div class="diagram-wrap">
+  <canvas id="c"></canvas>
+</div>
+
+<script>
+const W = 1600, H = 820;
+const canvas = document.getElementById('c');
+canvas.width  = W;
+canvas.height = H;
+const ctx = canvas.getContext('2d');
+
+const BG='#0d0d0d', BOX_BG='#1a1a1a', BOX_STR='#888888';
+const IBM_STR='#3b82f6', IBM_TXT='#60a5fa';
+const WHITE='#ffffff', MUTED='#aaaaaa', SUB='#94a3b8', GRID='#555555';
+const YELLOW='#facc15', ORANGE='#f97316';
+const BLUE_ARR='#60a5fa', BLUE_RET='#3b82f6';
+
+const LX = { user:95, app:275, auth:450, tikz:635, granite:820, watson:1010, valid:1195, render:1410 };
+
+function roundRect(x,y,w,h,r,fill,stroke,sw=1.5){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw;ctx.stroke();}
+}
+function txt(s,x,y,col,size,weight='normal',align='center'){
+  ctx.fillStyle=col;
+  ctx.font=`${weight} ${size}px -apple-system,"Segoe UI",sans-serif`;
+  ctx.textAlign=align; ctx.fillText(s,x,y);
+}
+function arrowLine(x1,y1,x2,y2,col,dashed=false,sw=1.6){
+  ctx.beginPath();
+  ctx.setLineDash(dashed?[6,4]:[]);
+  ctx.strokeStyle=col; ctx.lineWidth=sw;
+  ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.setLineDash([]);
+  const a=Math.atan2(y2-y1,x2-x1);
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-11*Math.cos(a-0.38),y2-11*Math.sin(a-0.38));
+  ctx.lineTo(x2-11*Math.cos(a+0.38),y2-11*Math.sin(a+0.38));
+  ctx.closePath(); ctx.fillStyle=col; ctx.fill();
+}
+function selfLoop(cx,y1,y2,col,label){
+  ctx.beginPath(); ctx.setLineDash([]);
+  ctx.strokeStyle=col; ctx.lineWidth=1.3;
+  ctx.moveTo(cx,y1);
+  ctx.bezierCurveTo(cx+80,y1,cx+80,y2,cx,y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx,y2); ctx.lineTo(cx+12,y2-5); ctx.lineTo(cx+12,y2+5);
+  ctx.closePath(); ctx.fillStyle=col; ctx.fill();
+  txt(label,cx+100,(y1+y2)/2+4,col,10.5,'600','left');
+}
+function dashedBox(x,y,w,h,r,stroke){
+  ctx.beginPath(); ctx.setLineDash([5,4]);
+  ctx.strokeStyle=stroke; ctx.lineWidth=1.2;
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+}
+function actor(cx,y,label,sub,ibm=false){
+  const bw=130,bh=46,bx=cx-bw/2;
+  roundRect(bx,y,bw,bh,5,BOX_BG,ibm?IBM_STR:BOX_STR,ibm?2:1.5);
+  txt(label,cx,y+20,ibm?IBM_TXT:WHITE,12,'700');
+  if(sub) txt(sub,cx,y+36,ibm?IBM_STR:MUTED,9.5);
+}
+function msg(lbl,x,y){ txt(lbl,x,y,WHITE,11.5); }
+function ret(lbl,x,y){ txt(lbl,x,y,SUB,11.5); }
+
+/* Background */
+ctx.fillStyle=BG; ctx.fillRect(0,0,W,H);
+
+/* Title bar */
+ctx.fillStyle='#111'; ctx.fillRect(0,0,W,28);
+txt('IBM Bob · AI LaTeX TikZ Studio — Sequence Diagram',W/2,18,'#94a3b8',11,'600');
+
+/* Top actors */
+actor(LX.user,  34,'User',          null);
+actor(LX.app,   34,'app.py',        '(Streamlit UI)');
+actor(LX.auth,  34,'auth.py',       '(Login / Register)');
+actor(LX.tikz,  34,'TikZGenerator', '(tikz_generator.py)');
+actor(LX.granite,34,'GraniteClient','(granite_client.py)');
+actor(LX.watson, 34,'IBM watsonx.ai','Granite LLM API',true);
+actor(LX.valid,  34,'validator.py', '(TikZ Validator)');
+actor(LX.render, 34,'renderer.py',  '(PDF / SVG)');
+
+/* Lifelines */
+Object.entries(LX).forEach(([k,x])=>{
+  ctx.beginPath(); ctx.setLineDash([4,4]);
+  ctx.strokeStyle=(k==='watson')?IBM_STR+'99':GRID+'88';
+  ctx.lineWidth=1; ctx.moveTo(x,80); ctx.lineTo(x,740); ctx.stroke();
+}); ctx.setLineDash([]);
+
+/* ── Messages ── */
+/* 1 */ arrowLine(LX.user+65,105,LX.app-65,105,WHITE); msg('Open app  /  Enter credentials',(LX.user+LX.app)/2,99);
+/* 2 */ arrowLine(LX.app+65,132,LX.auth-65,132,WHITE); msg('verify_user(username, password)',(LX.app+LX.auth)/2,126);
+/* 3 */ arrowLine(LX.auth-65,157,LX.app+65,157,MUTED,true); ret('True / False  (SHA-256 + salt)',(LX.app+LX.auth)/2,151);
+/* 4 */ arrowLine(LX.user+65,188,LX.app-65,188,WHITE); msg('"Draw a CNN architecture…"',(LX.user+LX.app)/2,182);
+/* 5 */ arrowLine(LX.app+65,215,LX.tikz-70,215,WHITE); msg('generator.generate(description)',(LX.app+LX.tikz)/2,209);
+/* 6 */ selfLoop(LX.tikz,237,261,YELLOW,'detect_diagram_type()');
+/* 7 */ selfLoop(LX.tikz,277,301,YELLOW,'build_generation_prompt()  (few-shot)');
+/* 8 */ arrowLine(LX.tikz+70,327,LX.granite-70,327,WHITE); msg('client.generate(prompt)',(LX.tikz+LX.granite)/2,321);
+
+/* ReAct loop box */
+dashedBox(838,340,558,282,6,GRID);
+roundRect(838,340,62,20,3,'#2a2a2a',GRID,1);
+txt('loop',869,354,MUTED,9.5,'700');
+txt('[IAM token + Granite API retry iterations]',1116,354,'#666',9.5);
+
+/* 9 */  arrowLine(LX.granite+70,372,LX.watson-65,372,BLUE_ARR); txt('POST /identity/token  (API key)',(LX.granite+LX.watson)/2,366,IBM_TXT,11.5);
+/* 10 */ arrowLine(LX.watson-65,396,LX.granite+70,396,BLUE_RET,true); ret('Bearer token',(LX.granite+LX.watson)/2,390);
+/* 11 */ arrowLine(LX.granite+70,422,LX.watson-65,422,BLUE_ARR); txt('POST /ml/v1/text/generation  (prompt + params)',(LX.granite+LX.watson)/2,416,IBM_TXT,11.5);
+/* 12 */ arrowLine(LX.watson-65,448,LX.granite+70,448,BLUE_RET,true); ret('generated_text  (results[0])',(LX.granite+LX.watson)/2,442);
+/* 13 */ selfLoop(LX.granite,466,490,ORANGE,'401? → refresh IAM token & retry once');
+/* 14 */ arrowLine(LX.granite-70,518,LX.tikz+70,518,MUTED,true); ret('raw model output string',(LX.tikz+LX.granite)/2,512);
+/* 15 */ selfLoop(LX.tikz,538,562,YELLOW,'_extract_tikz_code()  regex patterns');
+/* 16 */ arrowLine(LX.tikz+70,590,LX.valid-65,590,WHITE); msg('validate_tikz(code)  — 10 heuristic checks',(LX.tikz+LX.valid)/2,584);
+/* 17 */ arrowLine(LX.valid-65,614,LX.tikz+70,614,MUTED,true); ret('ValidationResult  (errors / warnings)',(LX.tikz+LX.valid)/2,608);
+/* 18 */ arrowLine(LX.tikz+70,638,LX.granite-70,638,ORANGE,true,1.3); txt('[if invalid] build_correction_prompt() → re-generate',(LX.tikz+LX.granite)/2,632,ORANGE,11);
+/* 19 */ arrowLine(LX.tikz+70,662,LX.render-65,662,WHITE); msg('render_pdf() / render_svg()  (optional)',(LX.tikz+LX.render)/2,656);
+/* 20 */ arrowLine(LX.render-65,684,LX.tikz+70,684,MUTED,true); ret('RenderResult  (pdf_bytes / svg_content)',(LX.tikz+LX.render)/2,678);
+/* 21 */ arrowLine(LX.tikz-70,706,LX.app+70,706,MUTED,true); ret('DiagramResult  (tikz_code, explanation, warnings)',(LX.app+LX.tikz)/2,700);
+/* 22 */ arrowLine(LX.app-70,728,LX.user+70,728,MUTED,true); ret('TikZ code + explanation + PDF download',(LX.user+LX.app)/2,722);
+
+/* Bottom actors */
+actor(LX.user,  742,'User',          null);
+actor(LX.app,   742,'app.py',        '(Streamlit UI)');
+actor(LX.auth,  742,'auth.py',       '(Login / Register)');
+actor(LX.tikz,  742,'TikZGenerator', '(tikz_generator.py)');
+actor(LX.granite,742,'GraniteClient','(granite_client.py)');
+actor(LX.watson, 742,'IBM watsonx.ai','Granite LLM API',true);
+actor(LX.valid,  742,'validator.py', '(TikZ Validator)');
+actor(LX.render, 742,'renderer.py',  '(PDF / SVG)');
+
+/* Legend */
+[[WHITE,'Synchronous call'],[MUTED,'Return / response'],[IBM_TXT,'IBM Cloud API'],[YELLOW,'Self-call'],[ORANGE,'Correction/retry']].forEach(([c,l],i)=>{
+  ctx.fillStyle=c; ctx.fillRect(30+i*210,800,20,9);
+  txt(l,30+i*210+26,809,'#aaa',10,'normal','left');
+});
+
+/* Download button */
+document.getElementById('dlBtn').addEventListener('click',()=>{
+  const a=document.createElement('a');
+  a.download='IBM_Bob_TikZ_Studio_Sequence_Diagram.jpg';
+  a.href=canvas.toDataURL('image/jpeg',0.97);
+  a.click();
+});
+</script>
+</body>
+</html>
