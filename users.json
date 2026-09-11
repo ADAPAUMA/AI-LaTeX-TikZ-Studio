@@ -1,8 +1,9 @@
 {
   "uma": {
     "email": "adapauma48@gmail.com",
-    "password_hash": "2b32f2c42f33f12514dd26a1b9a19fd0174056bccff06928ae525941b698781f",
-    "created_at": "1788860940.599985"
+    "password_hash": "f330f4e6018638fa31322cf8ca9780704e7ce2a603a57bebb445e820dda725fb",
+    "created_at": "1788860940.599985",
+    "salt": "bab62f7bc1d1efe1cdcbdf9f79ee70b5"
   },
   "nani": {
     "username": "nani",
